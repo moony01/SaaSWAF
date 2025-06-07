@@ -1,104 +1,121 @@
-# blogCoin# blogCoin
+# 📦 프로젝트 서버 실행 가이드 (SAM 버전)
 
-**Next.js**(프론트엔드)와 **AWS SAM (서버리스 애플리케이션 모델)**(백엔드)로 구성된 풀스택 프로젝트입니다.  
-이 앱은 리액트 기반 프론트엔드와 Lambda API 백엔드를 이용한 서버리스 아키텍처를 시연합니다.
+최종 작성일: 2025-06-06
 
 ---
 
-## 📁 프로젝트 구조
+## 📁 프로젝트 구성
 
+* **Frontend:** React / Next.js / Vue (로컬 개발서버 사용)
+* **Backend:** AWS SAM 기반 서버리스 아키텍처 (API Gateway + Lambda + DynamoDB)
+* **Infra:** AWS SAM (Serverless Application Model)
+* **DB:** DynamoDB (서버리스 NoSQL)
+
+---
+
+## 🚀 시작 준비
+
+### 1️⃣ 레포지토리 클론
+
+```bash
+git clone <레포지토리 주소>
+cd <프로젝트 디렉토리>
 ```
-coin_blog/
-├── frontend/         # Next.js 애플리케이션
-└── backend/          # AWS SAM 기반 Lambda 백엔드
-```
+
+### 2️⃣ 환경 변수 설정
+
+* `frontend/.env`
+* `backend/.env`
+
+> 각 디렉토리 내 샘플 `.env.example` 참고 후 세팅
+
+### 3️⃣ AWS SAM CLI 설치 (필수)
+
+* AWS 공식문서 참고 → [AWS SAM 설치 가이드](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/install-sam-cli.html)
 
 ---
 
-## 🚀 시작하기
+## ⚙️ Frontend 실행 방법
 
-### ✅ 사전 설치 필요 항목
+### 로컬 개발 서버
 
-- [Node.js](https://nodejs.org/) (권장: v18 이상)
-- [npm](https://www.npmjs.com/)
-- [Docker](https://www.docker.com/) (AWS SAM 로컬 실행에 필요)
-- [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html)
-- [AWS SAM CLI](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/install-sam-cli.html)
-- [WSL2 (Windows 사용자용)](https://learn.microsoft.com/ko-kr/windows/wsl/install)
-
----
-
-### 📦 의존성 설치
-
-#### 프론트엔드
 ```bash
 cd frontend
 npm install
+npm run dev
 ```
 
-#### 백엔드 (Lambda 함수)
-```bash
-cd backend/hello-world
-npm install
-```
+* 기본 주소: `http://localhost:3000` (혹은 설정된 포트)
 
 ---
 
-## ▶ 실행 방법
+## ⚙️ Backend 실행 방법 (SAM 환경)
 
-### 1. 백엔드 실행 (SAM API 로컬 서버)
+### SAM 로컬 실행 (로컬 개발 및 테스트)
+
+#### 1️⃣ 빌드
+
 ```bash
 cd backend
 sam build
+```
+
+#### 2️⃣ 로컬 API Gateway 에뮬레이션 실행
+
+```bash
 sam local start-api
 ```
-> 실행되면 `http://127.0.0.1:3000/hello` 에서 API 사용 가능
 
----
+* 기본 실행 주소: `http://localhost:3000` (혹은 `3001` 등 SAM 설정에 따라 다름)
+* `.env` 파일 자동 반영 안되는 경우 `--env-vars` 옵션 사용 가능
 
-### 2. 프론트엔드 실행 (Next.js 개발 서버)
+#### 3️⃣ 이벤트 기반 Lambda 테스트 (옵션)
+
 ```bash
-cd frontend
-npm run dev
+sam local invoke <함수이름> -e events/event.json
 ```
-> 앱 주소: `http://localhost:3000`
 
----
+### SAM 클라우드 배포
 
-## 🧪 API 연동 테스트
-
-브라우저나 콘솔에서 다음 명령어 실행:
 ```bash
-curl http://127.0.0.1:3000/hello
+sam deploy --guided
 ```
 
-또는 프론트엔드 접속 시, 다음과 같은 API 응답을 받을 수 있습니다:
-```json
-{
-  "message": "hello world"
-}
+* 최초 배포시 AWS 자격증명 및 리전 설정 필요
+
+---
+
+## 🐳 Docker (SAM 내부에서 자동 사용)
+
+SAM은 로컬에서 Lambda 실행 시 자동으로 Docker 컨테이너 사용함 → 따로 Docker 관리 필요 없음.
+
+필요시만 Docker 확인:
+
+```bash
+docker ps
 ```
 
 ---
 
-## 🧰 개발 참고 사항
+## 📝 자주 발생하는 이슈
 
-- ✅ `/hello` 경로는 `backend/template.yaml` 내 `HelloWorldFunction` 리소스에 정의되어 있음
-- ✅ CORS는 SAM 템플릿과 Lambda 응답 헤더 양쪽에서 처리됨
-- ✅ 프론트엔드는 `useEffect` 및 `fetch()`를 통해 API 요청을 수행함
-
----
-
-## 📌 TODO (다음 작업)
-
-- [ ] 추가 API 엔드포인트 생성 (예: `/posts`, `/comments`)
-- [ ] DynamoDB 연동
-- [ ] 인증 추가 (예: Cognito 또는 JWT)
-- [ ] `sam deploy --guided`로 AWS 배포
-- [ ] GitHub Actions로 CI/CD 구성
+* AWS CLI/SAM CLI 버전 확인
+* `sam build` 후 `.aws-sam` 폴더 확인
+* `.env` 환경변수 적용 확인 (`--env-vars` 활용)
+* Docker Desktop 실행중인지 확인 (로컬 Lambda 에뮬레이션 시 필요)
 
 ---
 
-## 📄 라이선스
+## ✅ 전체 실행 요약 흐름
 
-MIT License
+```bash
+# Frontend 실행
+cd frontend && npm install && npm run dev
+
+# Backend 실행 (SAM 기반)
+cd backend && sam build && sam local start-api
+```
+
+---
+
+> 문의 및 추가사항은 `docs/` 디렉토리 내 업데이트 기록 참고
