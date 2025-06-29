@@ -12,3 +12,20 @@ const { data: articles } = await useFetch('/api/news')  // SSR 시점 API (S3 �
     </ul>
   </div>
 </template>
+
+<!--
+🔄 전체 흐름 요약
+사용자가 /news 메뉴 클릭
+↓
+
+브라우저 → CloudFront → Lambda@Edge → news.mjs SSR 핸들러 실행
+↓
+
+SSR 실행 중 useFetch('/api/news')가 호출됨
+↓
+
+Lambda@Edge SSR 서버가 백엔드 API (/api/news)를 호출해 데이터 가져옴
+↓
+
+HTML 조립 → 브라우저로 응답
+-->

@@ -6,10 +6,10 @@
 
 ## 📁 프로젝트 구성
 
-* **Frontend:** React / Next.js / Vue (로컬 개발서버 사용)
-* **Backend:** AWS SAM 기반 서버리스 아키텍처 (API Gateway + Lambda + DynamoDB)
-* **Infra:** AWS SAM (Serverless Application Model)
-* **DB:** DynamoDB (서버리스 NoSQL)
+* **frontend:** Vue.js / Nuxt.js
+* **backend:** AWS SAM 기반 서버리스 아키텍처 (API Gateway + Lambda + DynamoDB)
+* **infra-cfn:** AWS CloudFormation
+* **edge-ssr:** AWS Lambda@Edge
 
 ---
 
@@ -21,13 +21,6 @@
 git clone <레포지토리 주소>
 cd <프로젝트 디렉토리>
 ```
-
-### 2️⃣ 환경 변수 설정
-
-* `frontend/.env`
-* `backend/.env`
-
-> 각 디렉토리 내 샘플 `.env.example` 참고 후 세팅
 
 ### 3️⃣ AWS SAM CLI 설치 (필수)
 
