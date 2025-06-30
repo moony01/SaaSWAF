@@ -56,3 +56,61 @@ Resources:
               LambdaFunctionARN: !Ref LambdaEdgeArn
 
         DefaultRootObject: index.html
+
+  # ✅ Lambda Function (API 백엔드)
+  ApiLambdaFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: saaswaf-api-news
+      Handler: index.handler
+      Runtime: nodejs18.x
+      Role: arn:aws:iam::123456789012:role/SaaSWAFLambdaExecutionRole  # 실제 IAM Role ARN으로 바꿔야 함
+      Code:
+        S3Bucket: my-artifact-bucket        # 배포 전 Lambda zip 업로드 필요
+        S3Key: backend-sam.zip
+      MemorySize: 128
+      Timeout: 10
+      Description: "Lambda for SaaSWAF API (/api/news)"
+
+  # ✅ API Gateway Rest API
+  ApiGateway:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: SaaSWAFApi
+
+  ApiResourceNews:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      RestApiId: !Ref ApiGateway
+      ParentId: !GetAtt ApiGateway.RootResourceId
+      PathPart: news
+
+  ApiMethodNewsGet:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      HttpMethod: GET
+      ResourceId: !Ref ApiResourceNews
+      RestApiId: !Ref ApiGateway
+      AuthorizationType: NONE
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub
+          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaArn}/invocations
+          - { LambdaArn: !GetAtt ApiLambdaFunction.Arn }
+
+  ApiDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn: ApiMethodNewsGet
+    Properties:
+      RestApiId: !Ref ApiGateway
+      StageName: prod
+
+  # ✅ Lambda Permission (API Gateway에서 Lambda 호출 허용)
+  LambdaApiInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref ApiLambdaFunction
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ApiGateway}/*/*"
