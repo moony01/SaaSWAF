@@ -102,6 +102,22 @@ Resources:
               AllowMethods: "'GET,POST,DELETE,OPTIONS'"
               AllowHeaders: "'Content-Type'"
               AllowOrigin: "'http://localhost:3000'"
+  GetNewsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: get-news
+      CodeUri: src/news/
+      Handler: getNews.handler
+      Runtime: nodejs18.x
+      Events:
+        GetNewsAPI:
+          Type: Api
+          Properties:
+            Path: /api/news
+            Method: GET
+      Policies:
+        - S3ReadPolicy:
+            BucketName: your-s3-bucket-name
 
 Outputs:
 
