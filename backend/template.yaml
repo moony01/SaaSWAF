@@ -7,6 +7,9 @@ Globals:
     Runtime: nodejs20.x
     Timeout: 10
     MemorySize: 256
+  Api:
+    Auth:
+      ApiKeyRequired: true
 
 Resources:
 
@@ -22,86 +25,7 @@ Resources:
       KeySchema:
         - AttributeName: id
           KeyType: HASH
-
-  # 게시판 리스트 조회
-  BoardListFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      CodeUri: src/handlers/board/
-      Handler: list.handler
-      Policies:
-        - DynamoDBCrudPolicy:
-            TableName: !Ref BoardTable
-      Events:
-        ListApi:
-          Type: Api
-          Properties:
-            Path: /board
-            Method: get
-            Cors:
-              AllowMethods: "'GET,POST,DELETE,OPTIONS'"
-              AllowHeaders: "'Content-Type'"
-              AllowOrigin: "'http://localhost:3000'"
-
-  # 게시판 단건 조회
-  BoardGetFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      CodeUri: src/handlers/board/
-      Handler: get.handler
-      Policies:
-        - DynamoDBCrudPolicy:
-            TableName: !Ref BoardTable
-      Events:
-        GetApi:
-          Type: Api
-          Properties:
-            Path: /board/{id}
-            Method: get
-            Cors:
-              AllowMethods: "'GET,POST,DELETE,OPTIONS'"
-              AllowHeaders: "'Content-Type'"
-              AllowOrigin: "'http://localhost:3000'"
-
-  # 게시판 글 생성
-  BoardCreateFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      CodeUri: src/handlers/board/
-      Handler: create.handler
-      Policies:
-        - DynamoDBCrudPolicy:
-            TableName: !Ref BoardTable
-      Events:
-        CreateApi:
-          Type: Api
-          Properties:
-            Path: /board
-            Method: post
-            Cors:
-              AllowMethods: "'GET,POST,DELETE,OPTIONS'"
-              AllowHeaders: "'Content-Type'"
-              AllowOrigin: "'http://localhost:3000'"
-
-  # 게시판 글 삭제
-  BoardDeleteFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      CodeUri: src/handlers/board/
-      Handler: delete.handler
-      Policies:
-        - DynamoDBCrudPolicy:
-            TableName: !Ref BoardTable
-      Events:
-        DeleteApi:
-          Type: Api
-          Properties:
-            Path: /board/{id}
-            Method: delete
-            Cors:
-              AllowMethods: "'GET,POST,DELETE,OPTIONS'"
-              AllowHeaders: "'Content-Type'"
-              AllowOrigin: "'http://localhost:3000'"
+              
   GetNewsFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -115,6 +39,8 @@ Resources:
           Properties:
             Path: /api/news
             Method: GET
+            Auth:
+              ApiKeyRequired: true
       Policies:
         - S3ReadPolicy:
             BucketName: your-s3-bucket-name
