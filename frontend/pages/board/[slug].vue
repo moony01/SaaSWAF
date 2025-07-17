@@ -1,10 +1,10 @@
 <script setup>
 const route = useRoute()
-const { data: post } = await useFetch(`/api/blog/${route.params.slug}`)
+const { data: post } = await useFetch(`/api/board/${route.params.slug}`)
 </script>
 
 <template>
-  <div>
+  <div v-if="post">
     <h1>{{ post.title }}</h1>
     <p>{{ post.content }}</p>
   </div>

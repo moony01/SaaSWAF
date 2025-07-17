@@ -4,11 +4,8 @@
     <nav>
       <NuxtLink to="/">Home</NuxtLink> |
       <NuxtLink to="/about">About</NuxtLink> |
-      <NuxtLink to="/products">Products</NuxtLink> |
-      <NuxtLink to="/services">Services</NuxtLink> |
-      <NuxtLink to="/board">Board</NuxtLink> |
       <NuxtLink to="/news">News</NuxtLink> |
-      <NuxtLink to="/contact">Contact</NuxtLink>
+      <NuxtLink to="/boarad">Board</NuxtLink>
     </nav>
     <main>
       <slot />
