@@ -5,7 +5,7 @@
       <NuxtLink to="/">Home</NuxtLink> |
       <NuxtLink to="/about">About</NuxtLink> |
       <NuxtLink to="/news">News</NuxtLink> |
-      <NuxtLink to="/boarad">Board</NuxtLink>
+      <NuxtLink to="/board">Board</NuxtLink>
     </nav>
     <main>
       <slot />
