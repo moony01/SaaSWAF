@@ -12,38 +12,28 @@ Globals:
       ApiKeyRequired: true
 
 Resources:
-
-  # DynamoDB 테이블
-  BoardTable:
-    Type: AWS::DynamoDB::Table
-    Properties:
-      TableName: BoardTable
-      BillingMode: PAY_PER_REQUEST
-      AttributeDefinitions:
-        - AttributeName: id
-          AttributeType: S
-      KeySchema:
-        - AttributeName: id
-          KeyType: HASH
-              
-  GetNewsFunction:
+  GetNoticesFunction:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: get-news
-      CodeUri: src/news/
-      Handler: getNews.handler
+      Handler: notice/getNotices.handler
       Runtime: nodejs18.x
       Events:
-        GetNewsAPI:
+        GetApi:
           Type: Api
           Properties:
-            Path: /api/news
+            Path: /notice
             Method: GET
-            Auth:
-              ApiKeyRequired: true
-      Policies:
-        - S3ReadPolicy:
-            BucketName: your-s3-bucket-name
+  CreateNoticeFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: notice/createNotice.handler
+      Runtime: nodejs18.x
+      Events:
+        PostApi:
+          Type: Api
+          Properties:
+            Path: /notice
+            Method: POST
 
 Outputs:
 
