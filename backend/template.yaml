@@ -19,13 +19,11 @@ Resources:
       PrimaryKey:
         Name: id
         Type: String
-      BillingMode: PAY_PER_REQUEST
 
   GetNoticeFunction:
     Type: AWS::Serverless::Function
     Properties:
       Handler: notice/getNotice.handler
-      Runtime: nodejs18.x
       Events:
         GetNoticeAPI:
           Type: Api
@@ -43,7 +41,6 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: notice/createNotice.handler
-      Runtime: nodejs18.x
       Events:
         CreateNoticeAPI:
           Type: Api
