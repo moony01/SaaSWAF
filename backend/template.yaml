@@ -12,31 +12,47 @@ Globals:
       ApiKeyRequired: true
 
 Resources:
-  GetNoticesFunction:
+  NoticeTable:
+    Type: AWS::Serverless::SimpleTable
+    Properties:
+      TableName: NoticeTable
+      PrimaryKey:
+        Name: id
+        Type: String
+      BillingMode: PAY_PER_REQUEST
+
+  GetNoticeFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: notice/getNotices.handler
+      Handler: notice/getNotice.handler
       Runtime: nodejs18.x
       Events:
-        GetApi:
+        GetNoticeAPI:
           Type: Api
           Properties:
             Path: /notice
             Method: GET
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref NoticeTable
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref NoticeTable
+
   CreateNoticeFunction:
     Type: AWS::Serverless::Function
     Properties:
       Handler: notice/createNotice.handler
       Runtime: nodejs18.x
       Events:
-        PostApi:
+        CreateNoticeAPI:
           Type: Api
           Properties:
             Path: /notice
             Method: POST
-
-Outputs:
-
-  BoardApiUrl:
-    Description: "Board API Gateway URL"
-    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref NoticeTable
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref NoticeTable
