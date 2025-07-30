@@ -1,5 +1,10 @@
 <script setup>
-const { data: notices } = await useFetch('/api/notice')
+const { data: notices } = await useFetch(`${process.env.API_BASE_URL}/notice`, {
+  method: 'GET',
+  headers: {
+    'x-api-key': process.env.API_KEY
+  }
+})
 </script>
 
 <template>
