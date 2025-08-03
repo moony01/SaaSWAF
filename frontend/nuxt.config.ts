@@ -7,7 +7,6 @@ export default defineNuxtConfig({
     // ✅ 서버 전용 (클라이언트에 노출 안 됨)
     API_BASE_URL: process.env.API_BASE_URL,
     API_KEY: process.env.API_KEY,
-
     public: {
       // ✅ 클라이언트에서 접근 가능
       apiBase: '/api'     // 이건 CSR용으로 남겨둬도 됨
@@ -19,7 +18,7 @@ export default defineNuxtConfig({
       crawlLinks: false,
       routes: [
         '/',              // 홈
-        '/about',         // 소개
+        '/about',         // 소개d
         '/news',          // 뉴스
       ]
     },
