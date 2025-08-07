@@ -5,8 +5,8 @@ export default defineNuxtConfig({
   modules: ['@nuxt/content'],
   runtimeConfig: {
     // ✅ 서버 전용 (클라이언트에 노출 안 됨)
-    API_BASE_URL: process.env.API_BASE_URL,
-    API_KEY: process.env.API_KEY,
+    apiBaseUrl: process.env.API_BASE_URL,
+    apiKey: process.env.API_KEY,
     public: {
       // ✅ 클라이언트에서 접근 가능
       apiBase: '/api'     // 이건 CSR용으로 남겨둬도 됨

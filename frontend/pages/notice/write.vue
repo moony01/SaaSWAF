@@ -1,15 +1,27 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
 
 const title = ref('')
 const content = ref('')
 
 const submitNotice = async () => {
-  await fetch('/api/notice', {
-    method: 'POST',
-    body: JSON.stringify({ title: title.value, content: content.value }),
-  })
-  alert('등록 완료!')
+  try {
+    await $fetch('/api/notice', {
+      method: 'POST',
+      body: {
+        action: 'insert',
+        payload: {
+          title: title.value,
+          content: content.value,
+        },
+      },
+    })
+    alert('등록 완료!')
+    title.value = ''
+    content.value = ''
+  } catch (err: any) {
+    alert('등록 실패: ' + err.message)
+  }
 }
 </script>
 
