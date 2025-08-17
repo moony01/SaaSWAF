@@ -23,7 +23,7 @@ Resources:
   GetNoticeFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: notice/getNotice.handler
+      Handler: src/notice/getNotice.handler
       Events:
         GetNoticeAPI:
           Type: Api
@@ -40,7 +40,7 @@ Resources:
   CreateNoticeFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: notice/createNotice.handler
+      Handler: src/notice/createNotice.handler
       Events:
         CreateNoticeAPI:
           Type: Api

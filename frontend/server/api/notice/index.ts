@@ -1,4 +1,3 @@
-// server/api/notice/index.ts
 import { defineEventHandler, readBody } from 'h3'
 
 export default defineEventHandler(async (event) => {

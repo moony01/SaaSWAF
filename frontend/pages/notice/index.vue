@@ -40,10 +40,7 @@ const goToWrite = () => {
 
     <!-- 목록 -->
     <ul>
-      <li
-        v-for="notice in notices"
-        :key="notice.id"
-      >
+      <li v-for="notice in notices" :key="notice.id">
         <!-- 상세 페이지 링크 -->
         <NuxtLink :to="`/notice/${notice.id}`">
           {{ notice.title }} - {{ notice.createdAt }}
