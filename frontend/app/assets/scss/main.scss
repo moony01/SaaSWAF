@@ -1,0 +1,7 @@
+// (필요하면 표준 모듈도 첫 줄 근처에)
+@use "sass:math";
+
+body {
+  color: $primary;
+  background: $bg;
+}

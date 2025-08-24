@@ -3,6 +3,17 @@ export default defineNuxtConfig({
   ssr: true,            // SSR + SSG 하이브리드
   pages: true,
   modules: ['@nuxt/content'], // Nuxt Content 모듈 포함 시
+  css: ['@/assets/scss/main.scss'],
+  vite: {
+    css: {
+      preprocessorOptions: {
+        scss: {
+          // 모든 SCSS 앞에 자동으로 삽입됨
+          additionalData: `@use "@/assets/scss/variables" as *;`
+        }
+      }
+    }
+  },
   runtimeConfig: {
     // ✅ 서버 전용 (클라이언트에 노출 안 됨)
     apiBaseUrl: process.env.API_BASE_URL,
